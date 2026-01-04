@@ -237,3 +237,42 @@ for step in range(100):
     frames.append(current_pos)
 
 print(f"✅ Captured {len(frames)} frames. Ready to animate!")
+import matplotlib.animation as animation
+from IPython.display import HTML
+
+# --- Step 2: Create Animation ---
+print("🎬 Rendering Animation...")
+
+fig = plt.figure(figsize=(6, 6))
+ax = fig.add_subplot(111, projection='3d')
+
+def update_graph(num):
+    ax.clear()
+    data = frames[num] # Get position at step 'num'
+    
+    # Plot Atoms
+    # Carbon (Index 0) - Black, Big
+    ax.scatter(data[0, 0], data[0, 1], data[0, 2], c='black', s=300, label='Carbon', edgecolors='white')
+    
+    # Hydrogens (Index 1-4) - Blue, Small
+    ax.scatter(data[1:, 0], data[1:, 1], data[1:, 2], c='cyan', s=100, label='Hydrogen', edgecolors='black')
+    
+    # Draw Bonds (Lines between C and H)
+    center = data[0]
+    for i in range(1, 5):
+        h_pos = data[i]
+        ax.plot([center[0], h_pos[0]], [center[1], h_pos[1]], [center[2], h_pos[2]], 'k--', linewidth=2, alpha=0.6)
+
+    # Styling
+    ax.set_xlim([-2, 2])
+    ax.set_ylim([-2, 2])
+    ax.set_zlim([-2, 2])
+    ax.set_title(f"Neural Force Field Simulation\nStep: {num}/100")
+    ax.legend()
+
+# Create Animation
+ani = animation.FuncAnimation(fig, update_graph, frames=len(frames), interval=50)
+
+# Display in Colab
+plt.close() # Close static plot
+HTML(ani.to_jshtml())
