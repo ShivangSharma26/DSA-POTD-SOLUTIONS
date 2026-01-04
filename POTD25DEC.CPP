@@ -1,7 +1,7 @@
 class Solution {
 public:
     long long maximumHappinessSum(vector<int>& happiness, int k) {
-        long long ans=0;
+        long long ansI=0;
         int y=0;
         sort(happiness.begin(),happiness.end());
 
